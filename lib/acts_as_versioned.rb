@@ -332,8 +332,8 @@ module ActiveRecord #:nodoc:
         def clone_versioned_model(orig_model, new_model)
           self.class.versioned_columns.each do |col|
             next unless orig_model.has_attribute?(col.name)
-            define_method(new_model, col.name.to_sym)
-            new_model.send("#{col.name.to_sym}=", orig_model.send(col.name))
+            define_method(new_model, RUBY_VERSION =~ /^1.8/ ? col.name : col.name.to_sym)
+            new_model.send("#{col.name}=".to_sym, orig_model.send(col.name.to_sym))
           end
 
           if orig_model.is_a?(self.class.versioned_class)
